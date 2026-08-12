@@ -1,0 +1,37 @@
+project_id = "crew-monorepo"
+
+# Non-default port range — this machine already runs another local Supabase
+# stack ("Saave") on the 54320s, so crew-monorepo uses the 56320s to avoid any
+# port collision with it.
+[api]
+enabled = true
+port = 56321
+schemas = ["public", "storage"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 56322
+major_version = 15
+
+[studio]
+enabled = true
+port = 56323
+
+[local_smtp]
+enabled = true
+port = 56324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:56321"
+
+[edge_runtime]
+enabled = true
+
+[analytics]
+enabled = false

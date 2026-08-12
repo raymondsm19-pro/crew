@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Builtwell Crew",
+    "slug": "builtwell-crew",
+    "scheme": "builtwellcrew",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Builtwell Crew records your location with each clock-in and clock-out punch.",
+        "NSCameraUsageDescription": "Builtwell Crew lets you attach photos to hazard and incident reports.",
+        "NSPhotoLibraryUsageDescription": "Builtwell Crew lets you attach photos to hazard and incident reports."
+      }
+    },
+    "android": {
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "CAMERA"]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Builtwell Crew records your location with each clock-in and clock-out punch."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Builtwell Crew lets you attach photos to hazard and incident reports.",
+          "cameraPermission": "Builtwell Crew lets you attach photos to hazard and incident reports."
+        }
+      ]
+    ]
+  }
+}

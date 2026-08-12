@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.output/
+.vinxi/
+.tanstack/
+*.gen.ts
+!routeTree.gen.ts
+.env
+.env.local
+supabase/.env.local
+supabase/.temp/
+supabase/.branches/
+.expo/
+.expo-shared/
+*.log
+.DS_Store

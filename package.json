@@ -1,0 +1,15 @@
+{
+  "name": "crew-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:admin": "bun --cwd apps/admin-web run dev",
+    "dev:mobile": "bun --cwd apps/crew-mobile run start",
+    "functions:serve": "supabase functions serve --env-file supabase/.env.local",
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset"
+  }
+}
