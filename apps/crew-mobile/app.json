@@ -8,6 +8,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.builtwellcrew.app",
       "supportsTablet": false,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Builtwell Crew records your location with each clock-in and clock-out punch.",
@@ -16,7 +17,12 @@
       }
     },
     "android": {
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "CAMERA"]
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -33,7 +39,15 @@
           "photosPermission": "Builtwell Crew lets you attach photos to hazard and incident reports.",
           "cameraPermission": "Builtwell Crew lets you attach photos to hazard and incident reports."
         }
-      ]
-    ]
+      ],
+      "expo-localization"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "cc619b44-9774-4e0f-b5c1-63ef01c9148f"
+      }
+    },
+    "owner": "saksham2302s-team"
   }
 }

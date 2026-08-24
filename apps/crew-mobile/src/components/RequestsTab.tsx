@@ -4,14 +4,17 @@ import type { CrewStatus } from "@crew/shared";
 import { REQUEST_KINDS } from "@crew/shared";
 import { useReportIncident } from "@/api/hooks";
 import { assetToEncodedFile, pickFromCamera, pickFromLibrary } from "@/lib/files";
+import { useLanguage } from "@/i18n/LanguageContext";
+import type { TranslationKey } from "@/i18n/translations";
 import { ProjectPicker } from "./ProjectPicker";
 import { colors } from "./theme";
 
 /** Photos + questions the crew sends to the office, with optional media. */
 export function RequestsTab({ status }: { status: CrewStatus }) {
   const report = useReportIncident();
+  const { t } = useLanguage();
   const [projectId, setProjectId] = useState(status.openShift?.projectId ?? status.projects[0]?.id ?? "");
-  const [kind, setKind] = useState<string>(REQUEST_KINDS[0]);
+  const [kind, setKind] = useState<string>(REQUEST_KINDS[0].value);
   const [description, setDescription] = useState("");
   const [urgent, setUrgent] = useState(false);
   const [fileCount, setFileCount] = useState(0);
@@ -42,16 +45,20 @@ export function RequestsTab({ status }: { status: CrewStatus }) {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Send photos or a question</Text>
-      <Text style={styles.subtitle}>Attach jobsite photos or a video and ask the office anything.</Text>
+      <Text style={styles.title}>{t("requests.title")}</Text>
+      <Text style={styles.subtitle}>{t("requests.subtitle")}</Text>
 
-      <Text style={styles.label}>Project</Text>
+      <Text style={styles.label}>{t("requests.projectLabel")}</Text>
       <ProjectPicker projects={status.projects} value={projectId} onChange={setProjectId} />
 
-      <Text style={[styles.label, { marginTop: 16 }]}>Type</Text>
-      <ProjectPicker projects={REQUEST_KINDS.map((k) => ({ id: k, label: k }))} value={kind} onChange={setKind} />
+      <Text style={[styles.label, { marginTop: 16 }]}>{t("requests.typeLabel")}</Text>
+      <ProjectPicker
+        projects={REQUEST_KINDS.map((k) => ({ id: k.value, label: t(`requests.kind.${k.key}` as TranslationKey) }))}
+        value={kind}
+        onChange={setKind}
+      />
 
-      <Text style={[styles.label, { marginTop: 16 }]}>Your question or request or daily update</Text>
+      <Text style={[styles.label, { marginTop: 16 }]}>{t("requests.descriptionLabel")}</Text>
       <TextInput
         style={[styles.input, { minHeight: 100, textAlignVertical: "top" }]}
         value={description}
@@ -59,33 +66,35 @@ export function RequestsTab({ status }: { status: CrewStatus }) {
           setDescription(v);
           setSent(false);
         }}
-        placeholder="What do you need? Add details so the office can answer fast."
+        placeholder={t("requests.descriptionPlaceholder")}
         multiline
       />
 
       <View style={{ flexDirection: "row", gap: 10, marginTop: 16 }}>
         <Pressable style={styles.secondaryButton} onPress={() => addFiles(true)}>
-          <Text style={styles.secondaryButtonText}>Camera</Text>
+          <Text style={styles.secondaryButtonText}>{t("requests.camera")}</Text>
         </Pressable>
         <Pressable style={styles.secondaryButton} onPress={() => addFiles(false)}>
-          <Text style={styles.secondaryButtonText}>{fileCount ? `${fileCount} file(s) attached` : "Add from library"}</Text>
+          <Text style={styles.secondaryButtonText}>
+            {fileCount ? t("requests.filesAttached", { count: fileCount }) : t("requests.addFromLibrary")}
+          </Text>
         </Pressable>
       </View>
 
       <View style={styles.urgentRow}>
-        <Text style={styles.urgentLabel}>Urgent — office should see this now</Text>
+        <Text style={styles.urgentLabel}>{t("requests.urgent")}</Text>
         <Switch value={urgent} onValueChange={setUrgent} />
       </View>
 
       {report.error && <Text style={styles.error}>{(report.error as Error).message}</Text>}
-      {sent && !report.isPending && <Text style={styles.success}>Sent to the office.</Text>}
+      {sent && !report.isPending && <Text style={styles.success}>{t("requests.sent")}</Text>}
 
       <Pressable
         style={[styles.button, (report.isPending || !projectId || !description.trim()) && styles.buttonDisabled]}
         disabled={report.isPending || !projectId || !description.trim()}
         onPress={submit}
       >
-        <Text style={styles.buttonText}>{report.isPending ? "Sending…" : "Send to office"}</Text>
+        <Text style={styles.buttonText}>{report.isPending ? t("requests.sending") : t("requests.send")}</Text>
       </Pressable>
     </View>
   );

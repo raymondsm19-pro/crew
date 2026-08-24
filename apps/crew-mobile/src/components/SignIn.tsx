@@ -1,29 +1,31 @@
 import { useState } from "react";
 import { Text, TextInput, View, Pressable, StyleSheet } from "react-native";
 import { useSignIn } from "@/api/hooks";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { colors } from "./theme";
 
 export function SignIn() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const signIn = useSignIn();
+  const { t } = useLanguage();
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Sign in</Text>
-      <Text style={styles.subtitle}>Use your phone number and the password the office gave you.</Text>
+      <Text style={styles.title}>{t("signIn.title")}</Text>
+      <Text style={styles.subtitle}>{t("signIn.subtitle")}</Text>
 
-      <Text style={styles.label}>Phone number</Text>
+      <Text style={styles.label}>{t("signIn.phoneLabel")}</Text>
       <TextInput
         style={styles.input}
         keyboardType="phone-pad"
         autoComplete="tel"
         value={phone}
         onChangeText={setPhone}
-        placeholder="510 555 1234"
+        placeholder={t("signIn.phonePlaceholder")}
       />
 
-      <Text style={styles.label}>Password</Text>
+      <Text style={styles.label}>{t("signIn.passwordLabel")}</Text>
       <TextInput
         style={styles.input}
         secureTextEntry
@@ -39,7 +41,7 @@ export function SignIn() {
         disabled={signIn.isPending}
         onPress={() => signIn.mutate({ phone, password })}
       >
-        <Text style={styles.buttonText}>{signIn.isPending ? "Signing in…" : "Sign in"}</Text>
+        <Text style={styles.buttonText}>{signIn.isPending ? t("signIn.signingIn") : t("signIn.submit")}</Text>
       </Pressable>
     </View>
   );

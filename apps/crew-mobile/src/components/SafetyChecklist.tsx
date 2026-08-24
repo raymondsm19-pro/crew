@@ -1,5 +1,7 @@
 import { Text, View, Pressable, StyleSheet } from "react-native";
 import { SAFETY_ITEMS } from "@crew/shared";
+import { useLanguage } from "@/i18n/LanguageContext";
+import type { TranslationKey } from "@/i18n/translations";
 import { colors } from "./theme";
 
 export function SafetyChecklist({
@@ -9,6 +11,8 @@ export function SafetyChecklist({
   value: Record<string, boolean>;
   onChange: (next: Record<string, boolean>) => void;
 }) {
+  const { t } = useLanguage();
+
   return (
     <View style={{ gap: 8 }}>
       {SAFETY_ITEMS.map((item) => {
@@ -22,7 +26,7 @@ export function SafetyChecklist({
             <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
               {checked && <Text style={styles.checkmark}>✓</Text>}
             </View>
-            <Text style={styles.label}>{item.label}</Text>
+            <Text style={styles.label}>{t(`safety.${item.key}` as TranslationKey)}</Text>
           </Pressable>
         );
       })}

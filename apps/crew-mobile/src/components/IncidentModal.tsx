@@ -4,13 +4,16 @@ import type { CrewStatus } from "@crew/shared";
 import { INCIDENT_KINDS } from "@crew/shared";
 import { useReportIncident } from "@/api/hooks";
 import { assetToEncodedFile, pickFromCamera, pickFromLibrary } from "@/lib/files";
+import { useLanguage } from "@/i18n/LanguageContext";
+import type { TranslationKey } from "@/i18n/translations";
 import { ProjectPicker } from "./ProjectPicker";
 import { colors } from "./theme";
 
 export function IncidentModal({ status, onClose }: { status: CrewStatus; onClose: () => void }) {
   const report = useReportIncident();
+  const { t } = useLanguage();
   const [projectId, setProjectId] = useState(status.openShift?.projectId ?? status.projects[0]?.id ?? "");
-  const [kind, setKind] = useState<string>(INCIDENT_KINDS[0]);
+  const [kind, setKind] = useState<string>(INCIDENT_KINDS[0].value);
   const [description, setDescription] = useState("");
   const [urgent, setUrgent] = useState(false);
   const [fileCount, setFileCount] = useState(0);
@@ -33,19 +36,19 @@ export function IncidentModal({ status, onClose }: { status: CrewStatus; onClose
   return (
     <Modal animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <ScrollView style={{ flex: 1, backgroundColor: colors.card }} contentContainerStyle={{ padding: 20 }}>
-        <Text style={styles.title}>Report a hazard or injury</Text>
+        <Text style={styles.title}>{t("incident.reportTitle")}</Text>
 
-        <Text style={styles.label}>Project</Text>
+        <Text style={styles.label}>{t("incident.projectLabel")}</Text>
         <ProjectPicker projects={status.projects} value={projectId} onChange={setProjectId} />
 
-        <Text style={[styles.label, { marginTop: 16 }]}>Type</Text>
+        <Text style={[styles.label, { marginTop: 16 }]}>{t("incident.typeLabel")}</Text>
         <ProjectPicker
-          projects={INCIDENT_KINDS.map((k) => ({ id: k, label: k }))}
+          projects={INCIDENT_KINDS.map((k) => ({ id: k.value, label: t(`incident.kind.${k.key}` as TranslationKey) }))}
           value={kind}
           onChange={setKind}
         />
 
-        <Text style={[styles.label, { marginTop: 16 }]}>What happened</Text>
+        <Text style={[styles.label, { marginTop: 16 }]}>{t("incident.whatHappenedLabel")}</Text>
         <TextInput
           style={[styles.input, { minHeight: 100, textAlignVertical: "top" }]}
           value={description}
@@ -55,17 +58,17 @@ export function IncidentModal({ status, onClose }: { status: CrewStatus; onClose
 
         <View style={{ flexDirection: "row", gap: 10, marginTop: 16 }}>
           <Pressable style={styles.secondaryButton} onPress={() => addFiles(true)}>
-            <Text style={styles.secondaryButtonText}>Camera</Text>
+            <Text style={styles.secondaryButtonText}>{t("incident.camera")}</Text>
           </Pressable>
           <Pressable style={styles.secondaryButton} onPress={() => addFiles(false)}>
             <Text style={styles.secondaryButtonText}>
-              {fileCount ? `${fileCount} file(s) attached` : "Add from library"}
+              {fileCount ? t("incident.filesAttached", { count: fileCount }) : t("incident.addFromLibrary")}
             </Text>
           </Pressable>
         </View>
 
         <View style={styles.urgentRow}>
-          <Text style={styles.urgentLabel}>Urgent — office should see this now</Text>
+          <Text style={styles.urgentLabel}>{t("incident.urgent")}</Text>
           <Switch value={urgent} onValueChange={setUrgent} />
         </View>
 
@@ -76,10 +79,10 @@ export function IncidentModal({ status, onClose }: { status: CrewStatus; onClose
           disabled={report.isPending}
           onPress={submit}
         >
-          <Text style={styles.buttonText}>{report.isPending ? "Sending…" : "Send report"}</Text>
+          <Text style={styles.buttonText}>{report.isPending ? t("incident.sending") : t("incident.sendReport")}</Text>
         </Pressable>
         <Pressable style={styles.cancelButton} onPress={onClose}>
-          <Text style={styles.cancelButtonText}>Cancel</Text>
+          <Text style={styles.cancelButtonText}>{t("incident.cancel")}</Text>
         </Pressable>
       </ScrollView>
     </Modal>

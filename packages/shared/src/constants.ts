@@ -7,13 +7,18 @@ export const SAFETY_ITEMS = [
   { key: "fit", label: "Fit for duty, no injuries" },
 ] as const;
 
-export const INCIDENT_KINDS = ["Hazard", "Near miss", "Injury", "Property damage"] as const;
+export const INCIDENT_KINDS = [
+  { key: "hazard", value: "Hazard" },
+  { key: "nearMiss", value: "Near miss" },
+  { key: "injury", value: "Injury" },
+  { key: "propertyDamage", value: "Property damage" },
+] as const;
 
 /** Non-safety things the crew sends up from the field: questions, asks, progress photos. */
 export const REQUEST_KINDS = [
-  "Question",
-  "Materials needed",
-  "Tool / equipment request",
-  "Progress photos",
-  "Other request",
+  { key: "question", value: "Question" },
+  { key: "materials", value: "Materials needed" },
+  { key: "tool", value: "Tool / equipment request" },
+  { key: "photos", value: "Progress photos" },
+  { key: "other", value: "Other request" },
 ] as const;

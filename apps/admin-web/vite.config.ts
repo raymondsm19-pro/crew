@@ -24,5 +24,8 @@ export default defineConfig({
   ],
   server: {
     port: 3100,
+    // Allows any host (e.g. rotating ngrok tunnel subdomains) to reach the dev
+    // server — fine for local testing, not meant for a production deployment.
+    allowedHosts: true,
   },
 });

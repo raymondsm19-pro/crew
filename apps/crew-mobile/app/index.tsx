@@ -4,21 +4,27 @@ import { useCrewStatus } from "@/api/hooks";
 import { SignIn } from "@/components/SignIn";
 import { CrewHome } from "@/components/CrewHome";
 import { RequestsTab } from "@/components/RequestsTab";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { colors } from "@/components/theme";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Index() {
   const { data: status, isPending } = useCrewStatus();
   const [tab, setTab] = useState<"time" | "requests">("time");
+  const { t } = useLanguage();
 
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.headerEmoji}>⛑️</Text>
-          <View>
-            <Text style={styles.headerTitle}>Builtwell Crew</Text>
-            <Text style={styles.headerSubtitle}>Time, breaks and safety</Text>
+          <View style={styles.headerTitleRow}>
+            <Text style={styles.headerEmoji}>⛑️</Text>
+            <View>
+              <Text style={styles.headerTitle}>{t("app.title")}</Text>
+              <Text style={styles.headerSubtitle}>{t("app.subtitle")}</Text>
+            </View>
           </View>
+          <LanguageToggle />
         </View>
 
         {isPending ? (
@@ -28,16 +34,18 @@ export default function Index() {
             <View style={styles.tabBar}>
               {(
                 [
-                  { key: "time", label: "Time & safety" },
-                  { key: "requests", label: "Photos & requests" },
+                  { key: "time", label: t("tabs.time") },
+                  { key: "requests", label: t("tabs.requests") },
                 ] as const
-              ).map((t) => (
+              ).map((tabItem) => (
                 <Pressable
-                  key={t.key}
-                  style={[styles.tabButton, tab === t.key && styles.tabButtonActive]}
-                  onPress={() => setTab(t.key)}
+                  key={tabItem.key}
+                  style={[styles.tabButton, tab === tabItem.key && styles.tabButtonActive]}
+                  onPress={() => setTab(tabItem.key)}
                 >
-                  <Text style={[styles.tabButtonText, tab === t.key && styles.tabButtonTextActive]}>{t.label}</Text>
+                  <Text style={[styles.tabButtonText, tab === tabItem.key && styles.tabButtonTextActive]}>
+                    {tabItem.label}
+                  </Text>
                 </Pressable>
               ))}
             </View>
@@ -54,7 +62,8 @@ export default function Index() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   content: { padding: 16, paddingBottom: 48, gap: 16 },
-  header: { flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 4 },
+  header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 4 },
+  headerTitleRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   headerEmoji: { fontSize: 32 },
   headerTitle: { fontSize: 20, fontWeight: "700", color: colors.foreground },
   headerSubtitle: { fontSize: 13, color: colors.muted },

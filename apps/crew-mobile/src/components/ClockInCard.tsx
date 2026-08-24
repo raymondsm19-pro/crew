@@ -4,6 +4,7 @@ import type { CrewStatus } from "@crew/shared";
 import { SAFETY_ITEMS } from "@crew/shared";
 import { useClockIn } from "@/api/hooks";
 import { readCoords } from "@/lib/geolocation";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { SafetyChecklist } from "./SafetyChecklist";
 import { ProjectPicker } from "./ProjectPicker";
 import { colors } from "./theme";
@@ -13,6 +14,7 @@ export function ClockInCard({ status }: { status: CrewStatus }) {
   const [projectId, setProjectId] = useState(status.projects[0]?.id ?? "");
   const [safety, setSafety] = useState<Record<string, boolean>>({});
   const [safetyNote, setSafetyNote] = useState("");
+  const { t } = useLanguage();
 
   const allChecked = SAFETY_ITEMS.every((i) => safety[i.key]);
 
@@ -23,15 +25,15 @@ export function ClockInCard({ status }: { status: CrewStatus }) {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Start your day</Text>
+      <Text style={styles.title}>{t("clockIn.title")}</Text>
 
-      <Text style={styles.label}>Project</Text>
+      <Text style={styles.label}>{t("clockIn.projectLabel")}</Text>
       <ProjectPicker projects={status.projects} value={projectId} onChange={setProjectId} />
 
-      <Text style={[styles.label, { marginTop: 16 }]}>Safety check</Text>
+      <Text style={[styles.label, { marginTop: 16 }]}>{t("clockIn.safetyCheckLabel")}</Text>
       <SafetyChecklist value={safety} onChange={setSafety} />
 
-      <Text style={[styles.label, { marginTop: 16 }]}>Anything unsafe to flag? (optional)</Text>
+      <Text style={[styles.label, { marginTop: 16 }]}>{t("clockIn.flagLabel")}</Text>
       <TextInput
         style={[styles.input, { minHeight: 80, textAlignVertical: "top" }]}
         value={safetyNote}
@@ -39,9 +41,7 @@ export function ClockInCard({ status }: { status: CrewStatus }) {
         multiline
       />
 
-      {!allChecked && (
-        <Text style={styles.hint}>Check every box you can. Unchecked items are flagged to the office.</Text>
-      )}
+      {!allChecked && <Text style={styles.hint}>{t("clockIn.hint")}</Text>}
       {clockIn.error && <Text style={styles.error}>{(clockIn.error as Error).message}</Text>}
 
       <Pressable
@@ -49,9 +49,9 @@ export function ClockInCard({ status }: { status: CrewStatus }) {
         disabled={clockIn.isPending || !projectId}
         onPress={submit}
       >
-        <Text style={styles.buttonText}>{clockIn.isPending ? "Clocking in…" : "Clock in"}</Text>
+        <Text style={styles.buttonText}>{clockIn.isPending ? t("clockIn.clockingIn") : t("clockIn.clockIn")}</Text>
       </Pressable>
-      <Text style={styles.footnote}>Your location is recorded with the punch.</Text>
+      <Text style={styles.footnote}>{t("clockIn.footnote")}</Text>
     </View>
   );
 }
