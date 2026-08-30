@@ -1,0 +1,8 @@
+{
+  "installCommand": "bun install",
+  "buildCommand": "cd apps/admin-web && bun run build",
+  "outputDirectory": "apps/admin-web/dist/client",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api" }
+  ]
+}
